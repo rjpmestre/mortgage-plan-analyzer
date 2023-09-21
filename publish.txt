@@ -1,0 +1,3 @@
+./vendor/twbs/bootstrap/dist/css/:::::./public/vendor/bootstrap/css/
+./vendor/twbs/bootstrap/dist/js/:::::./public/vendor/bootstrap/js/
+./vendor/fortawesome/font-awesome/css:::::./public/vendor/fortawesome/css/
