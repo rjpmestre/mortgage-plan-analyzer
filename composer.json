@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -26,7 +29,8 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.1",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "symplify/vendor-patches": "^11.2"
     },
     "autoload": {
         "classmap": [
@@ -61,6 +65,11 @@
         ]
     },
     "extra": {
+        "patches": {
+            "jeroennoten/laravel-adminlte": [
+                "patches/jeroennoten-laravel-adminlte-resources-views-master-blade-php.patch"
+            ]
+        },
         "laravel": {
             "dont-discover": []
         }
@@ -71,7 +80,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "cweagans/composer-patches": true
         }
     },
     "minimum-stability": "stable",

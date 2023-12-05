@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Custom;
-
+use finfo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +19,7 @@ class EuriborAcquisitor
 
     public function getEuribor12M()
     {
-
+return 1;
         if (!$this->isFileRecent()) {
             $updatedEuribor = $this->getEuriborFromApi();
             if(!empty($updatedEuribor)){

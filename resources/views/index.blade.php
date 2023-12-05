@@ -14,9 +14,21 @@
         line-height: 3px;
     }
 
+    table#tableSimulations th, table#tableSimulations td {
+        vertical-align: middle;
+    }
     table#tableSimulations td {
         white-space: nowrap;
     }
+
+    table#tableSimulations td span.input-group-text{
+        background-color:transparent;
+        border:transparent;
+    }
+
+
+    transparent
+
 
     table#tableSimulations td.last {
         font-weight: bolder;

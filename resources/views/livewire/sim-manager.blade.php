@@ -7,22 +7,22 @@
 
 
     @if(!empty($annualSummaries))
-        <div class="col-3 card card-outline">
+        <div class="col-3 card card-outline p-0">
             <div class="card-body">
                 <livewire:financial-plan-stack-graph :$annualSummaries key="{{ now() }}" subject="payment" subject_label="Prestações"/>
             </div>
         </div>
-        <div class="col-3 card card-outline">
+        <div class="col-3 card card-outline p-0">
             <div class="card-body">
                 <livewire:financial-plan-stack-graph :$annualSummaries key="{{ now() }}" subject="principal" subject_label="Amortizações"/>
             </div>
         </div>
-        <div class="col-3 card card-outline">
+        <div class="col-3 card card-outline p-0">
             <div class="card-body">
                 <livewire:financial-plan-stack-graph :$annualSummaries key="{{ now() }}" subject="interest" subject_label="Juros"/>
             </div>
         </div>
-        <div class="col-3 card card-outline">
+        <div class="col-3 card card-outline p-0">
             <div class="card-body">
                 <livewire:financial-plan-stack-graph :$annualSummaries key="{{ now() }}" subject="percentagePrincipal" subject_label="% nas Amortizações" units="percentage"/>
             </div>
@@ -30,7 +30,7 @@
     @endif
 
     <div class="col-12 card card-outline px-0">
-        <div class="card-body px-0">
+        <div class="card-body px-0 py-0">
 
             <table class="table table-bordered table-hover mx-0 px-0 table-sm" id="tableSimulations">
                 <tr>
@@ -58,10 +58,10 @@
                 <tr>
                      <th scope="row" class="text-right" style="white-space: nowrap">Montante <span class="text-danger">*</span></th>
                     @foreach ($simulations as $index => $simulation)
-                        <td colspan="5">
-                            <div class="input-group">
+                        <td colspan="5" class="p-0">
+                            <div class="input-group align-items-center">
                                 <input type="number" class="form-control simInput" id="inputLoanAmount"
-                                    wire:model.live.debounce.500ms="simulations.{{ $index }}.loanAmount" placeholder="Montante do empréstimo em euros...">
+                                    wire:model.live.debounce.1000ms="simulations.{{ $index }}.loanAmount" placeholder="Montante do empréstimo em euros...">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-euro"></i></span>
                                 </div>
@@ -73,9 +73,9 @@
                 <tr>
                      <th scope="row" class="text-right" style="white-space: nowrap">Prazo componente fixa<span class="text-danger">*</span></th>
                     @foreach ($simulations as $index => $simulation)
-                        <td colspan="5">
+                        <td colspan="5" class="p-0">
                             <input type="number" step="1" class="form-control simInput" id="inputNumberPaymentsFixedRate"
-                                wire:model.live.debounce.500ms="simulations.{{ $index }}.numberPaymentsFixedRate"
+                                wire:model.live.debounce.1000ms="simulations.{{ $index }}.numberPaymentsFixedRate"
                                 placeholder="Período taxa fixa em meses...">
                             @error("simulations.$index.numberPaymentsFixedRate") <span class="text-danger">{{ $message }}</span> @enderror
                         </td>
@@ -83,10 +83,10 @@
                 </tr>
                 <tr> <th scope="row" class="text-right" style="white-space: nowrap">Taxa fixa<span class="text-danger">*</span></th>
                     @foreach ($simulations as $index => $simulation)
-                        <td colspan="5">
-                            <div class="input-group">
+                        <td colspan="5" class="p-0">
+                            <div class="input-group align-items-center">
                                 <input type="number" step="1" class="form-control simInput" id="inputAnnualInterestFixedRate"
-                                    wire:model.live.debounce.500ms="simulations.{{ $index }}.annualInterestFixedRate"
+                                    wire:model.live.debounce.1000ms="simulations.{{ $index }}.annualInterestFixedRate"
                                     placeholder="Taxa fixa...">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
@@ -96,11 +96,12 @@
                         </td>
                     @endforeach
                 </tr>
-                <tr> <th scope="row" class="text-right" style="white-space: nowrap">Prazo componente variável<span class="text-danger">*</span></th>
+                <tr>
+                    <th scope="row" class="text-right" style="white-space: nowrap">Prazo componente variável<span class="text-danger">*</span></th>
                     @foreach ($simulations as $index => $simulation)
-                        <td colspan="5">
+                        <td colspan="5" class="p-0">
                             <input type="number" step="1" class="form-control simInput" id="inputNumberPaymentsVariableRate"
-                                wire:model.live.debounce.500ms="simulations.{{ $index }}.numberPaymentsVariableRate"
+                                wire:model.live.debounce.1000ms="simulations.{{ $index }}.numberPaymentsVariableRate"
                                 placeholder="Período taxa variável em meses...">
                             @error("simulations.$index.numberPaymentsVariableRate") <span class="text-danger">{{ $message }}</span> @enderror
                         </td>
@@ -113,10 +114,10 @@
                         <small>Euribor 12M:  <b>{{ $euribor }}%</b></small>
                     </th>
                     @foreach ($simulations as $index => $simulation)
-                        <td colspan="5">
-                            <div class="input-group">
+                        <td colspan="5" class="p-0">
+                            <div class="input-group align-items-center">
                                 <input type="number" step="1" class="form-control simInput" id="inputSpread"
-                                    wire:model.live.debounce.500ms="simulations.{{ $index }}.spread"
+                                    wire:model.live.debounce.1000ms="simulations.{{ $index }}.spread"
                                     placeholder="Taxa fixa...">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-percent"></i></span>
