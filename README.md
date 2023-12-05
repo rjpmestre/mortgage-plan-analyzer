@@ -24,4 +24,30 @@ If you are interested in contributing to the Mortgage Plan Analyzer project, fee
 
 ## Version
 
-Current version: v1.0.0a
+Current version: v1.0.1a
+
+## Installation
+### Need:
+- php
+- git
+- docker
+- composer
+
+### Execute
+```sh
+# clone the project
+git clone https://github.com/rjpmestre/mortgage-plan-analyzer.git mpa
+cd mpa
+
+# basic setup
+sudo composer update
+cp .env.example .env
+# generate your app key
+php artisan key:generate
+# optional adjust .env file: APP_URL and/or RAPID_API_KEY_EURIBOR [https://rapidapi.com/lrdavocado-O3qmwiGJQwR/api/euribor/]
+
+# build and start docker container
+sudo docker-compose build mpa-app
+chmod -R 777 storage
+sudo ./vendor/bin/sail up -d
+```

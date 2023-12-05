@@ -19,7 +19,6 @@ class EuriborAcquisitor
 
     public function getEuribor12M()
     {
-return 1;
         if (!$this->isFileRecent()) {
             $updatedEuribor = $this->getEuriborFromApi();
             if(!empty($updatedEuribor)){
