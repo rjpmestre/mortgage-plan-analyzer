@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\Log;
  */
 class EuriborAcquisitor
 {
-    public static $API_ADDRESS = 'https://euribor.p.rapidapi.com/12m/';
-    public static $EURIBOR_VALUE_JSON_KEY = 'Euribor value';
-    public static $EURIBOR_FILE_PATH = 'euribor';
+    public static $API_ADDRESS = 'https://euribor.p.rapidapi.com/';
+    public static $EURIBOR_FILE_PATH = '12m';
 
     public function getEuribor12M()
     {
@@ -55,13 +54,13 @@ class EuriborAcquisitor
         ->get($this::$API_ADDRESS);
 
         if ($apiResponse->successful()) {
-            if(!isset($apiResponse[EuriborAcquisitor::$EURIBOR_VALUE_JSON_KEY])){
+            if(!isset($apiResponse->json()[EuriborAcquisitor::$EURIBOR_FILE_PATH])){
                 Log::alert("Missing value in the Euribor API respons. ". json_encode($apiResponse->json()));
                 return null;
             }
-            return $apiResponse[EuriborAcquisitor::$EURIBOR_VALUE_JSON_KEY];
+            return $apiResponse->json()[EuriborAcquisitor::$EURIBOR_FILE_PATH];
         } else {
-            Log::alert("Something went wrong with the Euribor API request");
+            Log::alert("Something went wrong with the Euribor API request" . env('RAPID_API_KEY_EURIBOR'));
             return null;
         }
     }

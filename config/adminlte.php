@@ -99,7 +99,10 @@ return [
     | Preloader Animation
     |--------------------------------------------------------------------------
     |
-    | Here you can change the preloader animation configuration.
+    | Here you can change the preloader animation configuration. Currently, two
+    | modes are supported: 'fullscreen' for a fullscreen preloader animation
+    | and 'cwrapper' to attach the preloader animation into the content-wrapper
+    | element and avoid overlapping it with the sidebars and the top navbar.
     |
     | For detailed instructions you can look the preloader section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
@@ -108,9 +111,10 @@ return [
 
     'preloader' => [
         'enabled' => true,
+        'mode' => 'fullscreen ',
         'img' => [
             'path' => 'logo/logo-no-background.svg',
-            'alt' => 'MPA Preloader Image',
+            'alt' => 'MPA',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,
@@ -131,7 +135,7 @@ return [
 
     'usermenu_enabled' => true,
     'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-primary',
+    'usermenu_header_class' => 'bg-primary ',
     'usermenu_image' => false,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
@@ -153,7 +157,7 @@ return [
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => false ,
+    'layout_dark_mode' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -190,13 +194,27 @@ return [
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
-    'classes_content_header' => '',
+    'classes_content_header' => 'content-header',
     'classes_content' => 'container-fluid',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container-fluid',
+
+    // 'classes_body' => '',
+    // 'classes_brand' => '',
+    // 'classes_brand_text' => '',
+    // 'classes_content_wrapper' => '',
+    // 'classes_content_header' => '',
+    // 'classes_content' => '',
+    // 'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    // 'classes_sidebar_nav' => '',
+    // 'classes_topnav' => 'navbar-white navbar-light',
+    // 'classes_topnav_nav' => 'navbar-expand',
+    // 'classes_topnav_container' => 'container',
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -217,7 +235,7 @@ return [
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => false,
+    'sidebar_nav_accordion' => true,
     'sidebar_nav_animation_speed' => 300,
 
     /*
@@ -260,22 +278,27 @@ return [
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => false,
+    'disable_darkmode_routes' => false,
 
     /*
     |--------------------------------------------------------------------------
-    | Laravel Mix
+    | Laravel Asset Bundling
     |--------------------------------------------------------------------------
     |
-    | Here we can enable the Laravel Mix option for the admin panel.
+    | Here we can enable the Laravel Asset Bundling option for the admin panel.
+    | Currently, the next modes are supported: 'mix', 'vite' and 'vite_js_only'.
+    | When using 'vite_js_only', it's expected that your CSS is imported using
+    | JavaScript. Typically, in your application's 'resources/js/app.js' file.
+    | If you are not using any of these, leave it as 'false'.
     |
-    | For detailed instructions you can look the laravel mix section here:
+    | For detailed instructions you can look the asset bundling section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Other-Configuration
     |
     */
 
-    'enabled_laravel_mix' => false,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    'laravel_asset_bundling' => 'vite',
+    'laravel_css_path' => 'resources/css/app.css',
+    'laravel_js_path' => 'resources/js/app.js',
 
     /*
     |--------------------------------------------------------------------------
@@ -291,107 +314,37 @@ return [
 
     'menu' => [
         // Navbar items:
-        // [
-        //     'type'         => 'navbar-search',
-        //     'text'         => 'search',
-        //     'topnav_right' => true,
-        // ],
-        // [
-        //     'type'         => 'fullscreen-widget',
-        //     'topnav_right' => true,
-        // ],
-
-        // // Sidebar items:
-        // [
-        //     'type' => 'sidebar-menu-search',
-        //     'text' => 'search',
-        // ],
-        // [
-        //     'text' => 'blog',
-        //     'url'  => 'admin/blog',
-        //     'can'  => 'manage-blog',
-        // ],
-        // [
-        //     'text'        => 'pages',
-        //     'url'         => 'admin/pages',
-        //     'icon'        => 'far fa-fw fa-file',
-        //     'label'       => 4,
-        //     'label_color' => 'success',
-        // ],
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'profile',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
-        // [
-        //     'text'    => 'multilevel',
-        //     'icon'    => 'fas fa-fw fa-share',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'level_one',
-        //             'url'  => '#',
-        //         ],
-        //         [
-        //             'text'    => 'level_one',
-        //             'url'     => '#',
-        //             'submenu' => [
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url'  => '#',
-        //                 ],
-        //                 [
-        //                     'text'    => 'level_two',
-        //                     'url'     => '#',
-        //                     'submenu' => [
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url'  => '#',
-        //                         ],
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url'  => '#',
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url'  => '#',
-        //         ],
-        //     ],
-        // ],
-        // ['header' => 'labels'],
-        // [
-        //     'text'       => 'important',
-        //     'icon_color' => 'red',
-        //     'url'        => '#',
-        // ],
-        // [
-        //     'text'       => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url'        => '#',
-        // ],
-        // [
-        //     'text'       => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url'        => '#',
-        // ],
+        // Multi level not working - bootstrap issue
         [
-            'text'       => 'Simulator',
+            'text'          => 'EN',
+            'topnav_right'  => true,
+            'icon'          => 'flag-icon flag-icon-gb',
+            'url'           => '/lang/en',
+        ],
+        [
+            'text'          => 'PT',
+            'topnav_right'  => true,
+            'icon'          => 'flag-icon flag-icon-pt',
+            'url'           => '/lang/pt-pt',
+        ],
+        [
+            'text'       => 'simulator',
             'url'        => '/',
         ],
         [
-            'text'       => 'information',
-            'url'        => 'info',
+            'text'       => 'example1',
+            'url'        => '/?simulations[0][id]=6571a05ebd974&simulations[0][loanAmount]=100000&simulations[0][numberPaymentsFixedRate]=0&simulations[0][annualInterestFixedRate]=0&simulations[0][numberPaymentsVariableRate]=240&simulations[0][spread]=0.5&simulations[0][referenceVariableRate]=3.728&simulations[1][id]=6571a05ebd974&simulations[1][loanAmount]=100000&simulations[1][numberPaymentsFixedRate]=36&simulations[1][annualInterestFixedRate]=2&simulations[1][numberPaymentsVariableRate]=204&simulations[1][spread]=2&simulations[1][referenceVariableRate]=3.728&graphType=1&graphTermMode=0&graphShowTable=false',
+        ],
+        [
+            'text'       => 'example2',
+            'url'        => '/?simulations[0][id]=6571a05ebd974&simulations[0][loanAmount]=200000&simulations[0][numberPaymentsFixedRate]=240&simulations[0][annualInterestFixedRate]=3.5&simulations[0][numberPaymentsVariableRate]=240&simulations[0][spread]=1&simulations[0][referenceVariableRate]=3.728&simulations[1][id]=6571a05ebd974&simulations[1][loanAmount]=200000&simulations[1][numberPaymentsFixedRate]=60&simulations[1][annualInterestFixedRate]=2.5&simulations[1][numberPaymentsVariableRate]=420&simulations[1][spread]=0.8&simulations[1][referenceVariableRate]=3.728&simulations[2][id]=6571a05ebd974&simulations[2][loanAmount]=200000&simulations[2][numberPaymentsFixedRate]=120&simulations[2][annualInterestFixedRate]=4&simulations[2][numberPaymentsVariableRate]=360&simulations[2][spread]=1.5&simulations[2][referenceVariableRate]=3.728&term=10',
+        ],
+        [
+            'text'       => 'about',
+            'url'        => 'about',
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -428,6 +381,16 @@ return [
     */
 
     'plugins' => [
+        'loading' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'css/loading.css',
+                ],
+            ],
+        ],
         'Datatables' => [
             'active' => false,
             'files' => [

@@ -1,6 +1,6 @@
 # Mortgage Plan Analyzer
 
-This Laravel project, developed as part of [SUSE Hack Week 23](https://hackweek.opensuse.org/23/projects/mortgage-plan-analyzer), is a collaborative effort aimed at simplifying the analysis of housing loan proposals, with a focus on common configurations in Portugal.
+This Laravel project, developed as part of [SUSE Hack Week 23 and 24](https://hackweek.opensuse.org/24/projects/mortgage-plan-analyzer), is a collaborative effort aimed at simplifying the analysis of housing loan proposals, with a focus on common configurations in Portugal.
 
 ## Overview
 
@@ -8,7 +8,7 @@ The Mortgage Plan Analyzer focuses on analyzing proposals that typically have tw
 
 ## Links
 - **[GitHub Repository](https://github.com/rjpmestre/Mortgage-Plan-Analyzer)**
-- **[SUSE Hack Week 23 Project](https://hackweek.opensuse.org/23/projects/mortgage-plan-analyzer)**
+- **[SUSE Hack Week 24 Project](https://hackweek.opensuse.org/24/projects/mortgage-plan-analyzer)**
 - **[Euribor API](https://rapidapi.com/lrdavocado-O3qmwiGJQwR/api/euribor/)**
 - **[Price table (CAS)](https://pt.wikipedia.org/wiki/Tabela_Price)**
 - **[Banco de Portugal](https://clientebancario.bportugal.pt/credito-habitacao)**
@@ -24,7 +24,7 @@ If you are interested in contributing to the Mortgage Plan Analyzer project, fee
 
 ## Version
 
-Current version: v1.0.1a
+Current version: v1.1.0
 
 ## Installation
 ### Need:
@@ -40,7 +40,7 @@ git clone https://github.com/rjpmestre/mortgage-plan-analyzer.git mpa
 cd mpa
 
 # basic setup
-sudo composer update
+composer update
 cp .env.example .env
 # generate your app key
 php artisan key:generate

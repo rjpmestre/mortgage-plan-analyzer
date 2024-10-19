@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +20,17 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/info', function () {
-    return view('info');
+Route::get('/about', function () {
+    return view('about');
 });
 
+Route::get('/lang/{locale}', function (string $locale) {
+    if (! in_array($locale, ['en', 'pt-pt'])) {
+        abort(400);
+    }
+
+    App::setLocale($locale);
+    Session::put('applocale', $locale);
+
+    return redirect()->back();
+});

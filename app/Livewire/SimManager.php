@@ -11,9 +11,19 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Illuminate\Support\Str;
+use App\Traits\FinancialGraphTrait;
+
+use function PHPUnit\Framework\isEmpty;
 
 class SimManager extends Component
 {
+    use FinancialGraphTrait;
+
+    public $size ="sm";
+
+    #[Url]
+    public $showPlan = true;
+
     protected $rules = [
             "simulations.*.loanAmount" => 'required|decimal:0,2|min:0|max:999999999.99',
             "simulations.*.numberPaymentsFixedRate" => 'required|integer|min:0|max:720',
@@ -30,23 +40,28 @@ class SimManager extends Component
     // keep track of the payments for each simulation
     public $financialPlans = [];
 
-    // keep track of annual summaries for each simulation (short/medium term)
+    // keep track of annual summaries for each simulation
     public $annualSummaries = [];
+    public $scenarioNames = [];
+
 
     public $euribor = 0;
+
+    //
+    private $simulationsArray = [];
 
     public function mount()
     {
         $this->euribor = (new EuriborAcquisitor())->getEuribor12M();
+        self::updatedGraphType($this->graphType, $this->graphTermMode, $this->graphShowTable);
 
-        if(empty($this->simulations)){
+        if (empty($this->simulations)){
             $this->addSimulation();
-        }else{
+        } else {
             foreach($this->simulations as $index => $simulation){
                 $this->calculatePayments($index);
             }
         }
-
     }
 
     public function render()
@@ -59,23 +74,27 @@ class SimManager extends Component
         ]);
     }
 
-    #[On('addSimulation')]
-    public function addSimulation()
+    #[On('addSimulation}')]
+    public function addSimulation($id = null)
     {
-        if(empty($this->simulations)){
-            $this->simulations[] = [
-                'id' => uniqid(),
-                'loanAmount' => 0,
-                'numberPaymentsFixedRate' => 0,
-                'annualInterestFixedRate' => 0,
-                'numberPaymentsVariableRate' => 0,
-                'spread' => 0,
-                'referenceVariableRate' => $this->euribor,
-            ];
+        $simulation = isset($id) && isset($this->simulations[$id])
+        ? $this->simulations[$id]
+        : [
+            'id' => uniqid(),
+            'name' => 'Sim ' . (count($this->simulations) + 1),
+            'loanAmount' => 0,
+            'numberPaymentsFixedRate' => 0,
+            'annualInterestFixedRate' => 0,
+            'numberPaymentsVariableRate' => 0,
+            'spread' => 0,
+            'referenceVariableRate' => $this->euribor
+        ];
+
+        if (isset($id) && isset($this->simulations[$id]) && isset($this->simulations[$id]->name)) {
+            $simulation['name'] = $simulation['name'] . ' copy';
         }
-        else{
-            $this->simulations[] = end($this->simulations);
-        }
+
+        $this->simulations[] = $simulation;
 
         $this->calculatePayments(count($this->simulations)-1);
     }
@@ -90,14 +109,38 @@ class SimManager extends Component
 
         unset($this->annualSummaries[$index]);
         $this->annualSummaries = array_values($this->annualSummaries);
+
+        unset($this->simulationsArray[$index]);
     }
+
+    public function cloneSimulation($index)
+    {
+        unset($this->simulations[$index]);
+        $this->simulations = array_values($this->simulations);
+
+        unset($this->financialPlans[$index]);
+        $this->financialPlans = array_values($this->financialPlans);
+
+        unset($this->annualSummaries[$index]);
+        $this->annualSummaries = array_values($this->annualSummaries);
+
+        unset($this->simulationsArray[$index]);
+    }
+
 
     public function updated($propertyName, $value)
     {
         $this->validate();
+
         if (Str::startsWith($propertyName, 'simulations.')) {
-            $this->calculatePayments(explode('.', $propertyName)[1]);
+            $index = explode('.', $propertyName)[1];
+            $this->calculatePayments($index);
+        } else {
+            foreach($this->simulations as $index => $simulation){
+                $this->calculatePayments($index);
+            }
         }
+
     }
 
     private function calculatePayments($index)
@@ -108,7 +151,8 @@ class SimManager extends Component
             $this->simulations[$index]['annualInterestFixedRate'],
             $this->simulations[$index]['numberPaymentsVariableRate'],
             $this->simulations[$index]['spread'],
-            $this->simulations[$index]['referenceVariableRate']
+            $this->simulations[$index]['referenceVariableRate'],
+            $this->term
         );
 
         $this->financialPlans[$index] = collect($simulation->payments)->map(function ($payment) {
@@ -142,8 +186,63 @@ class SimManager extends Component
 
         })->all();
 
-        $this->annualSummaries[$index] = $simulation->annualSummaries;
+        $this->simulationsArray[$index] = $simulation;
+        $this->updateSummary($index);
     }
 
+    private function updateSummary($index)
+    {
+        $payments =  $this->simulationsArray[$index]->payments;
+
+        $annualSummaries = [];
+
+        // remove initial and total rows
+        array_shift($payments);
+        array_pop($payments);
+
+        // slice to summaries term & group them in years
+        $payments = array_slice($payments, 0, $this->term * 12);
+        $yearEntries = array_chunk($payments, 12);
+
+        $annualSummaries['payment'] = array_map(function ($chunk) {
+            return FinanceUtils::round(array_sum(array_column($chunk, 'payment')), 2);
+        }, $yearEntries);
+
+        $annualSummaries['interest'] = array_map(function ($chunk) {
+            return FinanceUtils::round(array_sum(array_column($chunk, 'interest')), 2);
+        }, $yearEntries);
+
+        $annualSummaries['principal'] = array_map(function ($chunk) {
+            return FinanceUtils::round(array_sum(array_column($chunk, 'principal')), 2);
+        }, $yearEntries);
+
+        $annualSummaries['percentagePrincipal'] = array_map(function ($chunk) {
+            $totalPrincipal = array_sum(array_column($chunk, 'principal'));
+            $totalPayment = array_sum(array_column($chunk, 'payment'));
+
+            if($totalPayment==0){
+                return 0;
+            }
+            return FinanceUtils::round($totalPrincipal * 100 / $totalPayment);
+        }, $yearEntries);
+
+        $annualSummaries['numberPaymentsFixedRate'] = $this->simulationsArray[$index]->numberPaymentsFixedRate;
+
+        $this->annualSummaries[$index] = $annualSummaries;
+        $this->scenarioNames = array_map(function($item) {
+            return $item['name'] ?? null; // Return 'name' if exists, otherwise null
+        }, $this->simulations);
+    }
+
+    public function toggleShowPlan()
+    {
+        $this->showPlan = !$this->showPlan;
+    }
+
+    public function resetDismissedSessionWarning()
+    {
+        session(['graphs_dash_line_warning' => false]);
+        session(['graphs_table_highlights_warning' => false]);
+    }
 
 }

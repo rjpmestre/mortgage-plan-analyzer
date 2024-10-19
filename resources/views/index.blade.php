@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
 @section('plugins.Chartjs', true)
+@section('plugins.FlagIcons', true)
 
 @push('css')
 <style>
@@ -16,9 +17,12 @@
 
     table#tableSimulations th, table#tableSimulations td {
         vertical-align: middle;
-    }
-    table#tableSimulations td {
         white-space: nowrap;
+        width: 1%;
+    }
+
+    table#tableSimulations tr.financial-plan-row-header th {
+        white-space: normal;
     }
 
     table#tableSimulations td span.input-group-text{
@@ -26,32 +30,35 @@
         border:transparent;
     }
 
-
-    transparent
-
-
     table#tableSimulations td.last {
         font-weight: bolder;
     }
 
     table#tableSimulations td.addnew {
-        background-color: #007bff;
+        background-color: #70b2f9;
     }
     table#tableSimulations td.addnew:hover {
         background-color: #b8daff;
         cursor: pointer;
     }
+
+    .height-graph {
+        min-height: 40vh;
+    }
+
+    @media (max-width: 576px) {
+        .height-sm-graph {
+            height: 60vh;
+        }
+    }
+
 </style>
 @endpush
 
 @section('content')
-    @livewire('sim-manager')
+    <livewire:sim-manager />
 @endsection
 
 @section('footer')
-    <div class="float-right d-none d-sm-inline">
-        <b>v</b>{{env('APP_VERSION','???')}}
-    </div>
-
-    Copyright © 2023 <b>{{env('APP_NAME','???')}}</b>. All rights reserved.
+    @include('footer')
 @endsection
