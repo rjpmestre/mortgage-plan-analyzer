@@ -6,38 +6,25 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Carbon\Carbon;
+use Livewire\Attributes\Reactive;
 
 trait FinancialGraphTrait
 {
-    #[Url]
-    public $graphType = 0;
+    #[Reactive]
+    public $annualSummaries;
 
-    #[Url]
-    public $graphTermMode = 0;
+    #[Reactive]
+    public $scenarioNames;
 
-    #[Url]
-    public $graphShowTable = 0;
+    public $size;
+    public $graphShowTable;
 
-    public $term = 10;
+    public $subject;
+    public $subjectLabel;
+    public $isMax;
+    public $units = "euro";
 
-
-    #[On('updated-graph-settings')]
-    public function updatedGraphType($graphType, $graphTermMode, $graphShowTable){
-        $this->graphType = $graphType;
-        $this->graphTermMode = $graphTermMode;
-        $this->graphShowTable = $graphShowTable;
-        switch ($graphTermMode) {
-            case 0:
-                $this->term = 10;
-                break;
-            case 1:
-                $this->term = 20;
-                break;
-            default:
-                $this->term = 100;
-                break;
-        }
-        self::updated(null, null);
-    }
+    public $labels;
+    public $datasets;
 
 }

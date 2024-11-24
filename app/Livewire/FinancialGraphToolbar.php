@@ -17,7 +17,6 @@ class FinancialGraphToolbar extends Component
     #[Url]
     public $graphShowTable = 0;
 
-
     public function render()
     {
         return view('livewire.financial-graph-toolbar');

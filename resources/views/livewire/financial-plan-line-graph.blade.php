@@ -2,7 +2,7 @@
     use App\Custom\FinanceUtils;
     use App\Custom\ColorUtils;
 @endphp
-<div class="col col-md-6 col-lg-3">
+<div class="col col-md-6 col-xl-3">
     <div class="card card-lightblue card-outline mb-0">
         <div class="card-header">
             <h3 class="card-title">{{ Str::ucfirst($subjectLabel) }}</h3>

@@ -11,13 +11,15 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Illuminate\Support\Str;
-use App\Traits\FinancialGraphTrait;
 
 use function PHPUnit\Framework\isEmpty;
 
 class SimManager extends Component
 {
-    use FinancialGraphTrait;
+    public $graphType = 0;
+    public $graphTermMode = 0;
+    public $graphShowTable = 0;
+    public $term = 10;
 
     public $size ="sm";
 
@@ -53,7 +55,7 @@ class SimManager extends Component
     public function mount()
     {
         $this->euribor = (new EuriborAcquisitor())->getEuribor12M();
-        self::updatedGraphType($this->graphType, $this->graphTermMode, $this->graphShowTable);
+        self::updatedGraphSettings($this->graphType, $this->graphTermMode, $this->graphShowTable);
 
         if (empty($this->simulations)){
             $this->addSimulation();
@@ -74,6 +76,25 @@ class SimManager extends Component
         ]);
     }
 
+    #[On('updated-graph-settings')]
+    public function updatedGraphSettings($graphType, $graphTermMode, $graphShowTable){
+        $this->graphType = $graphType;
+        $this->graphTermMode = $graphTermMode;
+        $this->graphShowTable = $graphShowTable;
+        switch ($graphTermMode) {
+            case 0:
+                $this->term = 10;
+                break;
+            case 1:
+                $this->term = 20;
+                break;
+            default:
+                $this->term = 100;
+                break;
+        }
+        self::updated(null, null);
+    }
+
     #[On('addSimulation}')]
     public function addSimulation($id = null)
     {
@@ -90,12 +111,11 @@ class SimManager extends Component
             'referenceVariableRate' => $this->euribor
         ];
 
-        if (isset($id) && isset($this->simulations[$id]) && isset($this->simulations[$id]->name)) {
+        if (isset($id) && isset($simulation['name'])){
             $simulation['name'] = $simulation['name'] . ' copy';
         }
 
         $this->simulations[] = $simulation;
-
         $this->calculatePayments(count($this->simulations)-1);
     }
 
@@ -111,22 +131,9 @@ class SimManager extends Component
         $this->annualSummaries = array_values($this->annualSummaries);
 
         unset($this->simulationsArray[$index]);
+        unset($this->scenarioNames[$index]);
+        $this->scenarioNames = array_values($this->scenarioNames);
     }
-
-    public function cloneSimulation($index)
-    {
-        unset($this->simulations[$index]);
-        $this->simulations = array_values($this->simulations);
-
-        unset($this->financialPlans[$index]);
-        $this->financialPlans = array_values($this->financialPlans);
-
-        unset($this->annualSummaries[$index]);
-        $this->annualSummaries = array_values($this->annualSummaries);
-
-        unset($this->simulationsArray[$index]);
-    }
-
 
     public function updated($propertyName, $value)
     {

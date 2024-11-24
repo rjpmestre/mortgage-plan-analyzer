@@ -7,25 +7,11 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Reactive;
 use App\Custom\ColorUtils;
+use App\Traits\FinancialGraphTrait;
 
 class FinancialPlanLineAccGraph extends Component
 {
-    #[Reactive]
-    public $annualSummaries;
-
-    #[Reactive]
-    public $scenarioNames;
-
-    public $size;
-    public $graphShowTable;
-
-    public $subject;
-    public $subjectLabel;
-    public $isMax;
-    public $units = "euro";
-
-    public $labels;
-    public $datasets;
+    use FinancialGraphTrait;
 
     public function render()
     {
@@ -33,9 +19,8 @@ class FinancialPlanLineAccGraph extends Component
         $this->labels = [];
 
         for($i = 0; $i < count($this->annualSummaries[0][$this->subject]); $i++){
-            $this->labels[] = __('mpa.year')." ". ($i+1);
+            $this->labels[] = __('mpa.year') .' '. ($i+1);
         }
-
 
         foreach ($this->annualSummaries as $index => $data) {
 
@@ -64,7 +49,5 @@ class FinancialPlanLineAccGraph extends Component
 
         return view('livewire.financial-plan-line-acc-graph');
     }
-
-
 
 }
