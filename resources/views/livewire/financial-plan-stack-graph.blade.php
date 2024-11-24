@@ -2,7 +2,7 @@
     use App\Custom\FinanceUtils;
     use App\Custom\ColorUtils;
 @endphp
-<div class="col col-md-6 col-lg-3">
+<div class="col col-md-6 col-xl-3">
     <div class="card card-lightblue card-outline mb-0">
         <div class="card-header">
             <h3 class="card-title">{{ __('mpa.comparing'). ' '.Str::ucfirst($subjectLabel).' '.__('mpa.per_year') }}</h3>
@@ -40,45 +40,56 @@
             </div>
 
             @if ($graphShowTable)
-            <div class="col px-0">
-                <table class="table table-bordered table-{{$size}} mx-0 px-0 ">
-                    <tr>
-                        <th class="bg-lightblue text-right text-{{$size}}">{{__('mpa.year')}} </th>
-                        @foreach ($labels as $label)
-                            <th class="bg-lightblue text-right text-{{$size}}">{{$label}}</th>
-                        @endforeach
-                    </tr>
+                <div class="row">
+                    <div class="col px-0">
+                        <table class="table table-bordered table-{{$size}} mx-0 px-0 ">
+                            <tr>
+                                <th class="bg-lightblue text-right text-{{$size}}">{{__('mpa.year')}} </th>
+                                @foreach ($labels as $label)
+                                    <th class="bg-lightblue text-right text-{{$size}}">{{$label}}</th>
+                                @endforeach
+                            </tr>
 
-                    @foreach($datasets as $index => $ds)
-                        @php
-                            $highlightValue = $highlightId = null;
-                            foreach ($ds['data'] as $dsId => $dataValue){
-                                if (isset($dataValue)) {
-                                    $currentValue = $dataValue;
-                                    if ($highlightValue === null || ($isMax ? $currentValue > $highlightValue : $currentValue < $highlightValue)) {
-                                        $highlightValue = $currentValue;
-                                        $highlightId = $dsId;
+                            @foreach($datasets as $index => $ds)
+                                @php
+                                    $highlightValue = $highlightId = null;
+                                    foreach ($ds['data'] as $dsId => $dataValue){
+                                        if (isset($dataValue)) {
+                                            $currentValue = $dataValue;
+                                            if ($highlightValue === null || ($isMax ? $currentValue > $highlightValue : $currentValue < $highlightValue)) {
+                                                $highlightValue = $currentValue;
+                                                $highlightId = $dsId;
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                        @endphp
-                        <tr style="background-color: {{ ColorUtils::getColor($highlightId, 0.2); }}">
-                            <td class="text-right text-{{$size}}">{{ $ds['label'] }}</td>
-                             @foreach ($ds['data'] as $dataValue)
-                                <td class="text-right text-{{$size}} @if($dataValue == $highlightValue) text-bold @endif">
-                                    @switch($units)
-                                        @case('percentage')
-                                            {{ FinanceUtils::formatDecimal( $dataValue ) }}%
-                                            @break
-                                        @default
-                                            {{ FinanceUtils::formatCurrency( $dataValue ) }}
-                                    @endswitch
-                                </td>
+                                @endphp
+                                <tr style="background-color: {{ ColorUtils::getColor($highlightId, 0.2); }}">
+                                    <td class="text-right text-{{$size}}">{{ $ds['label'] }}</td>
+                                    @foreach ($ds['data'] as $dataValue)
+                                        <td class="text-right text-{{$size}} @if($dataValue == $highlightValue) text-bold @endif">
+                                            @switch($units)
+                                                @case('percentage')
+                                                    {{ FinanceUtils::formatDecimal( $dataValue ) }}%
+                                                    @break
+                                                @default
+                                                    {{ FinanceUtils::formatCurrency( $dataValue ) }}
+                                            @endswitch
+                                        </td>
+                                    @endforeach
+                                </tr>
                             @endforeach
-                        </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    @foreach ($labels as $index => $label)
+                        <div class="col-md-{{12/count($labels)}} d-flex justify-content-around">
+                            <span class="badge text-{{$size}}" style="background-color: {{ ColorUtils::getColor($index, 0.2) }};">{{$label}}</span>
+                        </div>
                     @endforeach
-                </table>
-            </div>
+
+                </div>
             @endif
 
         </div>

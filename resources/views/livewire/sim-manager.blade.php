@@ -18,16 +18,16 @@
                     <div class="row">
                         @switch($graphType)
                             @case(1)
-                                <livewire:financial-plan-line-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="payment" subject_label="{{ __('mpa.installments') }}" :$size :$graphShowTable :isMax=false />
-                                <livewire:financial-plan-line-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="principal" subject_label="{{ __('mpa.amortizations') }}" :$size :$graphShowTable :isMax=true />
-                                <livewire:financial-plan-line-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="interest" subject_label="{{ __('mpa.interest') }}" :$size :$graphShowTable :isMax=false />
-                                <livewire:financial-plan-line-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="percentagePrincipal" subject_label="{{ __('mpa.perc_amortizations_payment') }}" units="percentage" :$size :$graphShowTable :isMax=true />
+                                <livewire:financial-plan-line-graph     :$annualSummaries :$scenarioNames key="{{ now() }}" subject="payment" subject_label="{{ __('mpa.installments') }}" :$size :$graphShowTable :isMax=false />
+                                <livewire:financial-plan-line-graph     :$annualSummaries :$scenarioNames key="{{ now() }}" subject="principal" subject_label="{{ __('mpa.amortizations') }}" :$size :$graphShowTable :isMax=true />
+                                <livewire:financial-plan-line-graph     :$annualSummaries :$scenarioNames key="{{ now() }}" subject="interest" subject_label="{{ __('mpa.interest') }}" :$size :$graphShowTable :isMax=false />
+                                <livewire:financial-plan-line-graph     :$annualSummaries :$scenarioNames key="{{ now() }}" subject="percentagePrincipal" subject_label="{{ __('mpa.perc_amortizations_payment') }}" units="percentage" :$size :$graphShowTable :isMax=true />
                                 @break
                             @case(2)
                                 <livewire:financial-plan-line-acc-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="payment" subject_label="{{ __('mpa.installments') }}" :$size :$graphShowTable :isMax=false />
                                 <livewire:financial-plan-line-acc-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="principal" subject_label="{{ __('mpa.amortizations') }}" :$size :$graphShowTable :isMax=true />
                                 <livewire:financial-plan-line-acc-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="interest" subject_label="{{ __('mpa.interest') }}" :$size :$graphShowTable :isMax=false />
-                                <livewire:financial-plan-line-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="percentagePrincipal" subject_label="{{ __('mpa.perc_amortizations_payment') }}" units="percentage" :$size :$graphShowTable :isMax=true />
+                                <livewire:financial-plan-line-graph     :$annualSummaries :$scenarioNames key="{{ now() }}" subject="percentagePrincipal" subject_label="{{ __('mpa.perc_amortizations_payment') }}" units="percentage" :$size :$graphShowTable :isMax=true />
                                 @break
                             @default
                                 <livewire:financial-plan-stack-graph :$annualSummaries :$scenarioNames key="{{ now() }}" subject="payment" subject_label="{{ __('mpa.installments') }}" :$size :$graphShowTable :isMax=false />

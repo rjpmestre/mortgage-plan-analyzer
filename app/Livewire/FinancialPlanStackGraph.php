@@ -13,22 +13,6 @@ class FinancialPlanStackGraph extends Component
 {
     use FinancialGraphTrait;
 
-    #[Reactive]
-    public $annualSummaries;
-
-    #[Reactive]
-    public $scenarioNames;
-
-    public $size;
-
-    public $subject;
-    public $subjectLabel;
-    public $isMax;
-    public $units = "euro";
-
-    public $labels;
-    public $datasets;
-
     public function render()
     {
         $this->datasets = [];
@@ -42,7 +26,7 @@ class FinancialPlanStackGraph extends Component
 
         foreach ($transposedData as $index => $data) {
             $dataset = [
-                'label' => ($index + 1),
+                'label' => __('mpa.year')." ". ($index+1),
                 'data' => is_array($data) ? $data : [$data],
                 'backgroundColor' => ColorUtils::getColor($index, 0.4),
                 'borderColor' => ColorUtils::getColor($index, 1)
@@ -50,12 +34,8 @@ class FinancialPlanStackGraph extends Component
 
             $this->datasets[] = $dataset;
         }
+
         return view('livewire.financial-plan-stack-graph');
     }
-
-    public function updated($propertyName, $value)
-    {
-    }
-
 
 }

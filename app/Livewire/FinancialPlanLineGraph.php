@@ -7,25 +7,11 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Reactive;
 use App\Custom\ColorUtils;
+use App\Traits\FinancialGraphTrait;
 
 class FinancialPlanLineGraph extends Component
 {
-    #[Reactive]
-    public $annualSummaries;
-
-    #[Reactive]
-    public $scenarioNames;
-
-    public $size;
-    public $graphShowTable;
-
-    public $subject;
-    public $subjectLabel;
-    public $isMax;
-    public $units = "euro";
-
-    public $labels;
-    public $datasets;
+    use FinancialGraphTrait;
 
     public function render()
     {
