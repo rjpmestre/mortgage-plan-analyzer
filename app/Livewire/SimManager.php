@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Illuminate\Support\Str;
+use App\Enums\EuriborMaturity;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -25,6 +26,9 @@ class SimManager extends Component
 
     #[Url]
     public $showPlan = true;
+
+    #[Url]
+    public $showEuriborRates = true;
 
     protected $rules = [
             "simulations.*.loanAmount" => 'required|decimal:0,2|min:0|max:999999999.99',
@@ -46,15 +50,14 @@ class SimManager extends Component
     public $annualSummaries = [];
     public $scenarioNames = [];
 
-
-    public $euribor = 0;
+    public $euriborValues = [];
 
     //
     private $simulationsArray = [];
 
     public function mount()
     {
-        $this->euribor = (new EuriborAcquisitor())->getEuribor12M();
+        $this->euriborValues = (new EuriborAcquisitor())->getEuriborValues();
         self::updatedGraphSettings($this->graphType, $this->graphTermMode, $this->graphShowTable);
 
         if (empty($this->simulations)){
@@ -74,6 +77,39 @@ class SimManager extends Component
         return view('livewire.sim-manager', [
             'maxPayments' => $maxPayments,
         ]);
+    }
+
+    public function updatedSimulations($value, $path)
+    {
+        // Get the specific field being updated (e.g., "0.loanAmount")
+        $parts = explode('.', $path);
+
+        // Only normalize numeric fields
+        $numericFields = [
+            'loanAmount',
+            'annualInterestFixedRate',
+            'spread',
+            'referenceVariableRate',
+        ];
+
+        if (isset($parts[0]) && isset($parts[1]) && in_array($parts[1], $numericFields)) {
+            $index = $parts[0];
+            $field = $parts[1];
+
+            // Get the current value
+            $currentValue = $this->simulations[$index][$field] ?? '';
+
+            // Remove spaces and replace commas with periods
+            $normalizedValue = str_replace(',', '.', preg_replace('/\s+/', '', $currentValue));
+
+            // Only update if the value changed after normalization
+            if ($currentValue !== $normalizedValue) {
+                $this->simulations[$index][$field] = $normalizedValue;
+
+                // Revalidate the specific field after normalization
+                $this->validateOnly("simulations.{$index}.{$field}");
+            }
+        }
     }
 
     #[On('updated-graph-settings')]
@@ -108,7 +144,7 @@ class SimManager extends Component
             'annualInterestFixedRate' => 0,
             'numberPaymentsVariableRate' => 0,
             'spread' => 0,
-            'referenceVariableRate' => $this->euribor
+            'referenceVariableRate' => $this->euriborValues[EuriborMaturity::EURIBOR_12M->value]
         ];
 
         if (isset($id) && isset($simulation['name'])){
@@ -252,4 +288,8 @@ class SimManager extends Component
         session(['graphs_table_highlights_warning' => false]);
     }
 
+    #[On('toggle-euribor-rates')]
+    public function toggleEuriborRates(){
+        $this->showEuriborRates = !$this->showEuriborRates;
+    }
 }
