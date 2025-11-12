@@ -10,7 +10,7 @@
         <div class="col card-row card px-0" >
             <div class="card-header">
                 <div class="card-tools">
-                    <livewire:financial-graph-toolbar />
+                    <livewire:financial-graph-toolbar :graphType="$graphType" :graphTermMode="$graphTermMode" :graphShowTable="$graphShowTable" />
                 </div>
             </div>
             <div class="card-body px-0 py-0 ">
@@ -174,7 +174,7 @@
                     <tr>
                         <th scope="row" class="text-right text-{{$size}}" x-data="{ open: @entangle('showEuriborRates') }">
 
-                            <i class="fas fa-question-circle text-primary pr-1" @click="open = !open" alt="{{ __('mpa.euribor_rates_hint') }}" title="{{ __('mpa.euribor_rates_hint') }}"></i>
+                            <i class="fas fa-question-circle text-primary pr-1" @click="open = !open" alt="{{ __('mpa.toggle_euribor_rates_hint') }}" title="{{ __('mpa.toggle_euribor_rates_hint') }}"></i>
                             <span alt="{{ __('mpa.euribor_hint') }}" title="{{ __('mpa.euribor_hint') }}">{{ __('mpa.euribor') }}
                             <span class="text-danger">*</span></span>
 

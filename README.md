@@ -24,7 +24,7 @@ If you are interested in contributing to the Mortgage Plan Analyzer project, fee
 
 ## Version
 
-Current version: v1.1.0
+Current version: v1.2.1
 
 ## Installation
 ### Need:
