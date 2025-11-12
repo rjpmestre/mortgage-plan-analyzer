@@ -8,13 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 class FinancialGraphToolbar extends Component
 {
-    #[Url]
     public $graphType = 0;
-
-    #[Url]
     public $graphTermMode = 0;
-
-    #[Url]
     public $graphShowTable = 0;
 
     public function render()

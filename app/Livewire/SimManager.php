@@ -17,11 +17,16 @@ use function PHPUnit\Framework\isEmpty;
 
 class SimManager extends Component
 {
+    #[Url]
     public $graphType = 0;
-    public $graphTermMode = 0;
-    public $graphShowTable = 0;
-    public $term = 10;
 
+    #[Url]
+    public $graphTermMode = 0;
+
+    #[Url]
+    public $graphShowTable = 0;
+
+    public $term = 10;
     public $size ="sm";
 
     #[Url]
