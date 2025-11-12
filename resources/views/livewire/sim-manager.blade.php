@@ -100,7 +100,7 @@
                         @foreach ($simulations as $index => $simulation)
                             <td colspan="5" class="p-0">
                                 <div class="input-group align-items-center">
-                                    <input type="number" class="form-control simInput text-{{$size}}" id="inputLoanAmount"
+                                    <input type="text" class="form-control simInput text-{{$size}}" id="inputLoanAmount"
                                         wire:model.live.debounce.1000ms="simulations.{{ $index }}.loanAmount" placeholder="{{ __('mpa.amount_hint') }}...">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="fas fa-euro fa-{{$size}}"></i></span>
@@ -128,7 +128,7 @@
                         @foreach ($simulations as $index => $simulation)
                             <td colspan="5" class="p-0">
                                 <div class="input-group align-items-center">
-                                    <input type="number" step="1" class="form-control simInput text-{{$size}}" id="inputAnnualInterestFixedRate"
+                                    <input type="text" step="1" class="form-control simInput text-{{$size}}" id="inputAnnualInterestFixedRate"
                                         wire:model.live.debounce.1000ms="simulations.{{ $index }}.annualInterestFixedRate"
                                         placeholder="{{ __('mpa.fixed_rate_hint') }}...">
                                     <div class="input-group-append text-xl">
@@ -155,15 +155,43 @@
                         <th scope="row" class="text-right text-{{$size}}" alt="{{ __('mpa.contracted_spread_hint') }}" title="{{ __('mpa.contracted_spread_hint') }}">
                             {{ __('mpa.contracted_spread') }}
                             <span class="text-danger">*</span>
-                            <br/>
-                            <small>{{ __('mpa.euribor_12m') }}:  <b>{{ $euribor }}%</b></small>
                         </th>
                         @foreach ($simulations as $index => $simulation)
                             <td colspan="5" class="p-0">
                                 <div class="input-group align-items-center">
-                                    <input type="number" step="1" class="form-control simInput text-{{$size}}" id="inputSpread"
+                                    <input type="text" step="1" class="form-control simInput text-{{$size}}" id="inputSpread"
                                         wire:model.live.debounce.1000ms="simulations.{{ $index }}.spread"
                                         placeholder="{{ __('mpa.contracted_spread_hint') }}...">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text "><i class="fas fa-percent fa-{{$size}}"></i></span>
+                                    </div>
+                                </div>
+                                @error("simulations.$index.spread") <span class="text-danger">{{ $message }}</span> @enderror
+                            </td>
+                        @endforeach
+                    </tr>
+
+                    <tr>
+                        <th scope="row" class="text-right text-{{$size}}" x-data="{ open: @entangle('showEuriborRates') }">
+
+                            <i class="fas fa-question-circle text-primary pr-1" @click="open = !open" alt="{{ __('mpa.euribor_rates_hint') }}" title="{{ __('mpa.euribor_rates_hint') }}"></i>
+                            <span alt="{{ __('mpa.euribor_hint') }}" title="{{ __('mpa.euribor_hint') }}">{{ __('mpa.euribor') }}
+                            <span class="text-danger">*</span></span>
+
+                            <div x-show="open">
+                                <small>{{ __('mpa.euribor_12m') }}:  <b>{{ $euriborValues['12m'] }}%</b></small><br/>
+                                <small>{{ __('mpa.euribor_6m') }}:  <b>{{ $euriborValues['6m'] }}%</b></small><br/>
+                                <small>{{ __('mpa.euribor_3m') }}:  <b>{{ $euriborValues['3m'] }}%</b></small><br/>
+                                <small>{{ __('mpa.euribor_1m') }}:  <b>{{ $euriborValues['1m'] }}%</b></small>
+                            </div>
+
+                        </th>
+                        @foreach ($simulations as $index => $simulation)
+                            <td colspan="5" class="p-0 align-baseline">
+                                <div class="input-group align-items-center">
+                                    <input type="text" step="1" class="form-control simInput text-{{$size}}" id="inputReferenceVariableRate"
+                                        wire:model.live.debounce.1000ms="simulations.{{ $index }}.referenceVariableRate"
+                                        placeholder="{{ __('mpa.euribor_hint') }}...">
                                     <div class="input-group-append">
                                         <span class="input-group-text "><i class="fas fa-percent fa-{{$size}}"></i></span>
                                     </div>
